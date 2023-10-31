@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 	b = create_buffer(argv[2]);
 	f = open(argv[1], O_RDONLY);
 	r = read(f, b, 1024);
-	t = open(argv[2], O_CREATE | O_WRONLY | O_TRUNC, 0664);
+	t = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	do {
 		if (f == -1 || r == -1)
 		{
@@ -68,6 +68,14 @@ int main(int argc, char *argv[])
 					"Error: Can't read from file %s\n", argv[1]);
 			free(b);
 			exit(98);
+		}
+		w = write(t, b, r);
+		if (t == -1 || w == -1)
+		{
+			dprintf(STDERR_FILENO,
+					"Error: Can't read from file %s\n", argv[2]);
+			free(b);
+			exit(99);
 		}
 		r = read(f, b, 1024);
 		t = open(argv[2], O_WRONLY | O_APPEND);
